@@ -3,465 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>案件利益シミュレーター</title>
-
-<style>
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #f4f6f8;
-    color: #222;
-}
-
-.container {
-    max-width: 900px;
-    margin: auto;
-    padding: 30px 20px;
-}
-
-h1 {
-    margin-bottom: 5px;
-}
-
-.subtitle {
-    color: #666;
-    margin-bottom: 30px;
-}
-
-.card {
-    background: white;
-    padding: 25px;
-    border-radius: 16px;
-    margin-bottom: 20px;
-    box-shadow: 0 3px 12px rgba(0,0,0,0.06);
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-}
-
-label {
-    font-size: 14px;
-    font-weight: 600;
-}
-
-input {
-    width: 100%;
-    padding: 12px;
-    margin-top: 6px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-}
-
-.result-main {
-    text-align: center;
-    padding: 25px;
-    border-radius: 12px;
-    background: #f7f7f7;
-    margin-bottom: 20px;
-}
-
-.status {
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.profit {
-    font-size: 42px;
-    font-weight: bold;
-    margin: 10px 0;
-}
-
-.result-grid {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 10px;
-}
-
-.result-box {
-    background: #f4f6f8;
-    padding: 15px;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.result-number {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 5px;
-}
-
-.scenario {
-    padding: 12px;
-    border-bottom: 1px solid #eee;
-}
-
-.scenario:last-child {
-    border-bottom: none;
-}
-
-.good {
-    color: #159447;
-}
-
-.warning {
-    color: #d48806;
-}
-
-.bad {
-    color: #d9363e;
-}
-
-@media(max-width:600px) {
-
-    .grid {
-        grid-template-columns: 1fr;
-    }
-
-    .result-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .profit {
-        font-size: 34px;
-    }
-}
-
-</style>
+<title>この仕事、いくら残る？ | 案件利益シミュレーター</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
-<div class="container">
-
-<h1>この仕事、いくら残る？</h1>
-
-<div class="subtitle">
-案件を受ける前に、本当の利益と実質時給を30秒で確認。
-</div>
-
-
-<div class="card">
-
-<h2>案件条件</h2>
-
-<div class="grid">
-
-<div>
-<label>見積金額（円）</label>
-<input id="price" type="number" value="150000">
-</div>
-
-<div>
-<label>材料費（円）</label>
-<input id="material" type="number" value="35000">
-</div>
-
-<div>
-<label>外注費（円）</label>
-<input id="outsourcing" type="number" value="20000">
-</div>
-
-<div>
-<label>交通費（円）</label>
-<input id="transport" type="number" value="3000">
-</div>
-
-<div>
-<label>駐車場・その他経費（円）</label>
-<input id="other" type="number" value="7000">
-</div>
-
-<div>
-<label>作業時間（時間）</label>
-<input id="workHours" type="number" step="0.5" value="8">
-</div>
-
-<div>
-<label>移動時間（時間）</label>
-<input id="travelHours" type="number" step="0.5" value="2">
-</div>
-
-<div>
-<label>自分の目標時給（円）</label>
-<input id="hourly" type="number" value="5000">
-</div>
-
-<div>
-<label>最低欲しい利益率（%）</label>
-<input id="targetMargin" type="number" value="25">
-</div>
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h2>判定結果</h2>
-
-<div class="result-main">
-
-<div id="status" class="status"></div>
-
-<div>実質利益</div>
-
-<div id="profit" class="profit"></div>
-
-<div id="message"></div>
-
-</div>
-
-
-<div class="result-grid">
-
-<div class="result-box">
-利益率
-<div id="margin" class="result-number"></div>
-</div>
-
-<div class="result-box">
-実質時給
-<div id="realHourly" class="result-number"></div>
-</div>
-
-<div class="result-box">
-総経費
-<div id="cost" class="result-number"></div>
-</div>
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h2>この価格で大丈夫？</h2>
-
-<div class="scenario">
-目標利益率を確保する最低見積額
-<strong id="minimumPrice"></strong>
-</div>
-
-<div class="scenario">
-10%値引きした場合の利益
-<strong id="discountProfit"></strong>
-</div>
-
-<div class="scenario">
-材料費が20%上がった場合の利益
-<strong id="materialRiseProfit"></strong>
-</div>
-
-<div class="scenario">
-作業が2時間延びた場合の実質利益
-<strong id="delayProfit"></strong>
-</div>
-
-<div class="scenario">
-この条件で月20件受注した場合
-<strong id="monthlyProfit"></strong>
-</div>
-
-</div>
-
-</div>
-
-
-<script>
-
-const ids = [
-"price",
-"material",
-"outsourcing",
-"transport",
-"other",
-"workHours",
-"travelHours",
-"hourly",
-"targetMargin"
-];
-
-ids.forEach(id => {
-    document.getElementById(id).addEventListener("input", calculate);
-});
-
-function yen(number) {
-
-    if (!Number.isFinite(number)) return "—";
-
-    return Math.round(number).toLocaleString("ja-JP") + "円";
-}
-
-function calculate() {
-
-    const price = Number(document.getElementById("price").value) || 0;
-    const material = Number(document.getElementById("material").value) || 0;
-    const outsourcing = Number(document.getElementById("outsourcing").value) || 0;
-    const transport = Number(document.getElementById("transport").value) || 0;
-    const other = Number(document.getElementById("other").value) || 0;
-
-    const workHours = Number(document.getElementById("workHours").value) || 0;
-    const travelHours = Number(document.getElementById("travelHours").value) || 0;
-
-    const hourly = Number(document.getElementById("hourly").value) || 0;
-    const targetMargin = Number(document.getElementById("targetMargin").value) || 0;
-
-    const totalHours = workHours + travelHours;
-
-    const cashCosts =
-        material +
-        outsourcing +
-        transport +
-        other;
-
-    const laborCost =
-        totalHours * hourly;
-
-    const totalCost =
-        cashCosts + laborCost;
-
-    const profit =
-        price - totalCost;
-
-    const margin =
-        price > 0
-        ? profit / price * 100
-        : 0;
-
-    const realHourly =
-        totalHours > 0
-        ? (price - cashCosts) / totalHours
-        : 0;
-
-
-    document.getElementById("profit").textContent =
-        yen(profit);
-
-    document.getElementById("margin").textContent =
-        margin.toFixed(1) + "%";
-
-    document.getElementById("realHourly").textContent =
-        yen(realHourly);
-
-    document.getElementById("cost").textContent =
-        yen(totalCost);
-
-
-    const status =
-        document.getElementById("status");
-
-    const message =
-        document.getElementById("message");
-
-
-    if (profit < 0) {
-
-        status.textContent = "🔴 条件見直し";
-        status.className = "status bad";
-
-        message.textContent =
-        "この条件では実質赤字になります。";
-
-    }
-
-    else if (margin < targetMargin) {
-
-        status.textContent = "🟡 要検討";
-        status.className = "status warning";
-
-        message.textContent =
-        "利益は出ますが、設定した目標利益率を下回っています。";
-
-    }
-
-    else {
-
-        status.textContent = "🟢 受注候補";
-        status.className = "status good";
-
-        message.textContent =
-        "設定した利益条件を満たしています。";
-
-    }
-
-
-    const targetDecimal =
-        targetMargin / 100;
-
-    let minimumPrice = 0;
-
-    if (targetDecimal < 1) {
-
-        minimumPrice =
-        totalCost / (1 - targetDecimal);
-
-    }
-
-
-    document.getElementById("minimumPrice").textContent =
-        " " + yen(minimumPrice);
-
-
-    const discountPrice =
-        price * 0.9;
-
-    const discountProfit =
-        discountPrice - totalCost;
-
-    document.getElementById("discountProfit").textContent =
-        " " + yen(discountProfit);
-
-
-    const increasedMaterial =
-        material * 1.2;
-
-    const materialRiseProfit =
-        price -
-        (
-            increasedMaterial +
-            outsourcing +
-            transport +
-            other +
-            laborCost
-        );
-
-    document.getElementById("materialRiseProfit").textContent =
-        " " + yen(materialRiseProfit);
-
-
-    const delayedLaborCost =
-        (totalHours + 2) * hourly;
-
-    const delayProfit =
-        price -
-        (
-            cashCosts +
-            delayedLaborCost
-        );
-
-    document.getElementById("delayProfit").textContent =
-        " " + yen(delayProfit);
-
-
-    document.getElementById("monthlyProfit").textContent =
-        " " + yen(profit * 20);
-
-}
-
-calculate();
-
-</script>
-
+<main class="container">
+    <header class="hero">
+        <p class="eyebrow">案件利益シミュレーター</p>
+        <h1>この仕事、いくら残る？</h1>
+        <p class="subtitle">見積を出す前に、利益・時間コスト・実質時給を30秒で確認</p>
+    </header>
+    <section class="panel input-panel" aria-labelledby="input-title">
+        <div class="section-heading"><div><p class="section-kicker">INPUT</p><h2 id="input-title">案件条件</h2></div><span class="live-badge">入力中に自動計算</span></div>
+        <div class="input-grid">
+            <label class="field field-wide">見積金額<span class="unit">円</span><input id="price" type="number" min="0" step="1000" value="150000" inputmode="decimal"></label>
+            <label class="field">材料費<span class="unit">円</span><input id="material" type="number" min="0" step="1000" value="35000" inputmode="decimal"></label>
+            <label class="field">外注費<span class="unit">円</span><input id="outsourcing" type="number" min="0" step="1000" value="20000" inputmode="decimal"></label>
+            <label class="field">交通費<span class="unit">円</span><input id="transport" type="number" min="0" step="500" value="3000" inputmode="decimal"></label>
+            <label class="field">駐車場・その他経費<span class="unit">円</span><input id="other" type="number" min="0" step="500" value="7000" inputmode="decimal"></label>
+            <label class="field">作業時間<span class="unit">時間</span><input id="workHours" type="number" min="0" step="0.5" value="8" inputmode="decimal"></label>
+            <label class="field">移動時間<span class="unit">時間</span><input id="travelHours" type="number" min="0" step="0.5" value="2" inputmode="decimal"></label>
+            <label class="field">自分の目標時給<span class="unit">円</span><input id="hourly" type="number" min="0" step="500" value="5000" inputmode="decimal"></label>
+            <label class="field">最低欲しい利益率<span class="unit">%</span><input id="targetMargin" type="number" min="0" step="1" value="25" inputmode="decimal"></label>
+        </div>
+    </section>
+    <section class="decision panel" aria-labelledby="decision-title">
+        <div class="section-heading compact-heading"><div><p class="section-kicker">DECISION</p><h2 id="decision-title">受注判断</h2></div><p id="target-note" class="target-note"></p></div>
+        <div id="status-area" class="status-area"><div id="status" class="status"></div><p id="message" class="status-message"></p></div>
+    </section>
+    <section class="panel flow-panel" aria-labelledby="flow-title">
+        <div class="section-heading"><div><p class="section-kicker">MONEY FLOW</p><h2 id="flow-title">お金の流れ</h2></div></div>
+        <div class="money-flow">
+            <div class="flow-item income"><span>見積金額</span><strong id="price-result"></strong></div><div class="flow-arrow" aria-hidden="true">↓</div>
+            <div class="flow-item expense"><span>現金経費</span><strong id="cash-costs"></strong></div><div class="flow-arrow" aria-hidden="true">↓</div>
+            <div class="flow-item gross"><span>粗利益（現金ベース）</span><strong id="gross-profit"></strong></div><div class="flow-arrow" aria-hidden="true">↓</div>
+            <div class="flow-item expense"><span>時間コスト</span><strong id="time-cost"></strong></div><div class="flow-arrow" aria-hidden="true">↓</div>
+            <div class="flow-item final"><span>時間コスト差引後利益</span><strong id="net-profit"></strong></div>
+        </div>
+        <div class="metric-grid"><div class="metric-card"><span>粗利益率</span><strong id="gross-margin"></strong></div><div class="metric-card"><span>時間コスト差引後利益率</span><strong id="net-margin"></strong></div><div class="metric-card"><span>実質時給</span><strong id="real-hourly"></strong></div></div>
+    </section>
+    <section class="panel simulation-panel" aria-labelledby="simulation-title">
+        <div class="section-heading"><div><p class="section-kicker">SIMULATION</p><h2 id="simulation-title">もし条件が変わったら？</h2></div></div>
+        <div class="scenario-list"><div class="scenario"><span>10%値引きした場合の利益</span><strong id="discount-profit"></strong></div><div class="scenario"><span>材料費が20%上昇した場合の利益</span><strong id="material-rise-profit"></strong></div><div class="scenario"><span>作業時間が2時間延びた場合の利益</span><strong id="delay-profit"></strong></div><div class="scenario"><span>同条件で月20件受注した場合の利益</span><strong id="monthly-profit"></strong></div><div class="scenario highlight"><span>目標利益率を確保する最低見積金額</span><strong id="minimum-price"></strong></div></div>
+    </section>
+    <footer class="note">時間コストは、入力した目標時給をもとにした参考値です。本ツールの「時間コスト差引後利益」は、税務・会計上の利益を示すものではありません。</footer>
+</main>
+<script src="script.js"></script>
 </body>
 </html>
