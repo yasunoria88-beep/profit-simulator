@@ -3,16 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>この仕事、いくら残る？ | 案件利益シミュレーター</title>
+<title>この仕事、受ける？ | 受注判断ツール</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <main class="container">
     <header class="hero">
-        <p class="eyebrow">案件利益シミュレーター</p>
-        <h1>この仕事、いくら残る？</h1>
-        <p class="subtitle">見積を出す前に、利益・時間コスト・実質時給を30秒で確認</p>
+        <p class="eyebrow">受注判断ツール</p>
+        <h1>この仕事、受ける？</h1>
+        <p class="subtitle">見積金額・経費・拘束時間から、“本当に受けたい条件か”を30秒で判断</p>
     </header>
+
     <section class="panel input-panel" aria-labelledby="input-title">
         <div class="section-heading"><div><p class="section-kicker">INPUT</p><h2 id="input-title">案件条件</h2></div><span class="live-badge">入力中に自動計算</span></div>
         <div class="input-grid">
@@ -24,13 +25,20 @@
             <label class="field">作業時間<span class="unit">時間</span><input id="workHours" type="number" min="0" step="0.5" value="8" inputmode="decimal"></label>
             <label class="field">移動時間<span class="unit">時間</span><input id="travelHours" type="number" min="0" step="0.5" value="2" inputmode="decimal"></label>
             <label class="field">自分の目標時給<span class="unit">円</span><input id="hourly" type="number" min="0" step="500" value="5000" inputmode="decimal"></label>
-            <label class="field">最低欲しい利益率<span class="unit">%</span><input id="targetMargin" type="number" min="0" step="1" value="25" inputmode="decimal"></label>
+            <label class="field">最低欲しい利益率<span class="unit">%</span><input id="targetMargin" type="number" step="1" value="25" inputmode="decimal"></label>
+            <label class="field">月に残したい目標金額<span class="unit">円</span><input id="monthlyTarget" type="number" step="10000" value="500000" inputmode="decimal"></label>
+            <label class="field">月間稼働日数<span class="unit">日</span><input id="workingDays" type="number" step="1" value="20" inputmode="decimal"></label>
+            <label class="field">1日あたり案件数<span class="unit">件</span><input id="dailyCases" type="number" step="1" value="1" inputmode="decimal"></label>
         </div>
     </section>
+
     <section class="decision panel" aria-labelledby="decision-title">
         <div class="section-heading compact-heading"><div><p class="section-kicker">DECISION</p><h2 id="decision-title">受注判断</h2></div><p id="target-note" class="target-note"></p></div>
         <div id="status-area" class="status-area"><div id="status" class="status"></div><p id="message" class="status-message"></p></div>
+        <div id="gap-message" class="gap-message"></div>
+        <p class="decision-note">この判定は、入力した目標時給と最低利益率を基準にした参考表示です。受注可否を決めるものではありません。</p>
     </section>
+
     <section class="panel flow-panel" aria-labelledby="flow-title">
         <div class="section-heading"><div><p class="section-kicker">MONEY FLOW</p><h2 id="flow-title">お金の流れ</h2></div></div>
         <div class="money-flow">
@@ -42,11 +50,25 @@
         </div>
         <div class="metric-grid"><div class="metric-card"><span>粗利益率</span><strong id="gross-margin"></strong></div><div class="metric-card"><span>時間コスト差引後利益率</span><strong id="net-margin"></strong></div><div class="metric-card"><span>実質時給</span><strong id="real-hourly"></strong></div></div>
     </section>
+
+    <section class="panel monthly-panel" aria-labelledby="monthly-title">
+        <div class="section-heading"><div><p class="section-kicker">MONTHLY PLAN</p><h2 id="monthly-title">この仕事を続けたら月いくら？</h2></div></div>
+        <div class="monthly-grid">
+            <div class="monthly-stat"><span>想定月間案件数</span><strong id="monthly-cases"></strong></div>
+            <div class="monthly-stat"><span>想定月間売上</span><strong id="monthly-sales"></strong></div>
+            <div class="monthly-stat"><span>想定月間粗利益</span><strong id="monthly-gross-profit"></strong></div>
+            <div class="monthly-stat featured"><span>想定月間時間コスト差引後利益</span><strong id="monthly-net-profit"></strong></div>
+        </div>
+        <div id="monthly-goal-message" class="monthly-goal-message"></div>
+        <div class="inverse-box"><h3>目標月収から逆算</h3><p id="required-cases"></p><p id="required-daily-cases"></p></div>
+    </section>
+
     <section class="panel simulation-panel" aria-labelledby="simulation-title">
         <div class="section-heading"><div><p class="section-kicker">SIMULATION</p><h2 id="simulation-title">もし条件が変わったら？</h2></div></div>
-        <div class="scenario-list"><div class="scenario"><span>10%値引きした場合の利益</span><strong id="discount-profit"></strong></div><div class="scenario"><span>材料費が20%上昇した場合の利益</span><strong id="material-rise-profit"></strong></div><div class="scenario"><span>作業時間が2時間延びた場合の利益</span><strong id="delay-profit"></strong></div><div class="scenario"><span>同条件で月20件受注した場合の利益</span><strong id="monthly-profit"></strong></div><div class="scenario highlight"><span>目標利益率を確保する最低見積金額</span><strong id="minimum-price"></strong></div></div>
+        <div class="scenario-list"><div class="scenario"><span>10%値引きした場合の時間コスト差引後利益</span><strong id="discount-profit"></strong></div><div class="scenario"><span>材料費が20%上昇した場合の時間コスト差引後利益</span><strong id="material-rise-profit"></strong></div><div class="scenario"><span>作業時間が2時間延びた場合の時間コスト差引後利益</span><strong id="delay-profit"></strong></div></div>
     </section>
-    <footer class="note">時間コストは、入力した目標時給をもとにした参考値です。本ツールの「時間コスト差引後利益」は、税務・会計上の利益を示すものではありません。</footer>
+
+    <footer class="note">時間コストは、入力した目標時給をもとにした参考値です。本ツールの「時間コスト差引後利益」は、税務・会計上の利益を示すものではありません。受注判定は、ユーザー自身が設定した条件を基準とする参考表示です。最終的な価格設定・受注判断はユーザー自身で行ってください。</footer>
 </main>
 <script src="script.js"></script>
 </body>
