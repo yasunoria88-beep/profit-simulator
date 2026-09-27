@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yasunoria88-beep.github.io/profit-simulator/sitemap.xml

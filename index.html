@@ -3,7 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>この仕事、受ける？ | 受注判断ツール</title>
+<title>工事・案件の利益計算シミュレーター｜見積前に利益率・実質時給を無料計算</title>
+<meta name="description" content="見積金額、経費、拘束時間、目標時給から、仕事を受ける前に本当に残る利益と受注条件を無料でシミュレーションできます。">
+<link rel="canonical" href="https://yasunoria88-beep.github.io/profit-simulator/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22%3E%3Crect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%2317714b%22/%3E%3Cpath d=%22M18 17h28v7H26v8h17v7H26v8h20v7H18z%22 fill=%22%23fff%22/%3E%3Cpath d=%22M43 17h4v30h-4z%22 fill=%22%23dff1e5%22/%3E%3C/svg%3E" type="image/svg+xml">
+<meta name="theme-color" content="#17714b">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ja_JP">
+<meta property="og:site_name" content="案件利益シミュレーター">
+<meta property="og:title" content="工事・案件の利益計算シミュレーター">
+<meta property="og:description" content="見積を出す前に、利益・利益率・時間コスト・実質時給を無料で確認。">
+<meta property="og:url" content="https://yasunoria88-beep.github.io/profit-simulator/">
+<meta property="og:image" content="https://yasunoria88-beep.github.io/profit-simulator/favicon.svg">
+<meta property="og:image:alt" content="案件利益シミュレーターのアイコン">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="工事・案件の利益計算シミュレーター">
+<meta name="twitter:description" content="見積を出す前に、利益・利益率・時間コスト・実質時給を無料で確認。">
+<meta name="twitter:image" content="https://yasunoria88-beep.github.io/profit-simulator/favicon.svg">
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "案件利益シミュレーター",
+    "url": "https://yasunoria88-beep.github.io/profit-simulator/",
+    "description": "見積金額、経費、拘束時間、目標時給から受注条件を判断する無料のWebアプリケーションです。",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "JavaScript対応ブラウザ",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" }
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+        { "@type": "Question", "name": "この利益計算ツールは無料ですか？", "acceptedAnswer": { "@type": "Answer", "text": "はい、無料で利用できます。" } },
+        { "@type": "Question", "name": "時間コストとは何ですか？", "acceptedAnswer": { "@type": "Answer", "text": "入力した作業時間・移動時間に、目標時給を掛けた参考値です。" } },
+        { "@type": "Question", "name": "「時間コスト差引後利益」は会計上の利益ですか？", "acceptedAnswer": { "@type": "Answer", "text": "いいえ。税務・会計上の利益ではなく、目標時給をもとにした参考値です。" } },
+        { "@type": "Question", "name": "一人親方や個人事業主でも使えますか？", "acceptedAnswer": { "@type": "Answer", "text": "はい。一人親方や個人事業主の案件条件の確認に使えます。" } },
+        { "@type": "Question", "name": "見積金額はいくらにすればいいですか？", "acceptedAnswer": { "@type": "Answer", "text": "入力条件から見積額の目安を確認できます。最終的な価格設定・受注判断はご自身で行ってください。" } }
+    ]
+}
+</script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,9 +54,14 @@
         <p class="eyebrow">受注判断ツール</p>
         <h1>この仕事、受ける？</h1>
         <p class="subtitle">見積金額・経費・拘束時間から、“本当に受けたい条件か”を30秒で判断</p>
+                <p class="hero-description">個人事業主・一人親方・フリーランス・小規模事業者向け。見積を出す前に、現金経費だけでなく自分の時間も含めて、受けたい価格条件かを確認できます。</p>
     </header>
 
-    <section class="panel input-panel" aria-labelledby="input-title">
+        <nav class="quick-nav" aria-label="ページ内ナビゲーション">
+                <a href="#calculator">計算する</a><a href="#about">ツールについて</a><a href="#how-to-use">使い方</a><a href="#faq">FAQ</a>
+        </nav>
+
+        <section id="calculator" class="panel input-panel" aria-labelledby="input-title">
         <div class="section-heading"><div><p class="section-kicker">INPUT</p><h2 id="input-title">案件条件</h2></div><span class="live-badge">入力中に自動計算</span></div>
         <div class="input-grid">
             <label class="field field-wide">見積金額<span class="unit">円</span><input id="price" type="number" min="0" step="1000" value="150000" inputmode="decimal"></label>
@@ -66,6 +113,34 @@
     <section class="panel simulation-panel" aria-labelledby="simulation-title">
         <div class="section-heading"><div><p class="section-kicker">SIMULATION</p><h2 id="simulation-title">もし条件が変わったら？</h2></div></div>
         <div class="scenario-list"><div class="scenario"><span>10%値引きした場合の時間コスト差引後利益</span><strong id="discount-profit"></strong></div><div class="scenario"><span>材料費が20%上昇した場合の時間コスト差引後利益</span><strong id="material-rise-profit"></strong></div><div class="scenario"><span>作業時間が2時間延びた場合の時間コスト差引後利益</span><strong id="delay-profit"></strong></div></div>
+    </section>
+
+    <section id="about" class="content-section" aria-labelledby="about-title">
+        <p class="section-kicker">ABOUT</p>
+        <h2 id="about-title">案件利益シミュレーターとは？</h2>
+        <p>案件利益シミュレーターは、仕事を受ける前に「この金額と条件で本当に受けたいか」を判断するための無料ツールです。売上から現金経費を引くだけでなく、作業時間と移動時間に自分の目標時給を掛けた時間コストも確認できます。</p>
+        <p>会計ソフトや税務申告のための計算ではなく、見積金額・コスト・時間のバランスを見て、価格や条件を再検討するための受注判断に使えます。</p>
+    </section>
+
+    <section id="how-to-use" class="content-section" aria-labelledby="how-to-use-title">
+        <p class="section-kicker">HOW TO USE</p>
+        <h2 id="how-to-use-title">使い方</h2>
+        <ol class="steps">
+            <li><strong>案件条件を入力</strong><span>見積金額、現金経費、作業時間、移動時間を入力します。</span></li>
+            <li><strong>目標を設定</strong><span>自分の目標時給、最低欲しい利益率、月間目標を入力します。</span></li>
+            <li><strong>判定と不足額を確認</strong><span>受注判断、あといくら必要か、お金の流れを確認します。</span></li>
+            <li><strong>月間計画と変化に備える</strong><span>月収逆算と値引き・材料費上昇・時間延長のシミュレーションを確認します。</span></li>
+        </ol>
+    </section>
+
+    <section id="faq" class="content-section faq-section" aria-labelledby="faq-title">
+        <p class="section-kicker">FAQ</p>
+        <h2 id="faq-title">よくある質問</h2>
+        <details><summary>この利益計算ツールは無料ですか？</summary><p>はい、無料で利用できます。</p></details>
+        <details><summary>時間コストとは何ですか？</summary><p>入力した作業時間・移動時間に、目標時給を掛けた参考値です。</p></details>
+        <details><summary>「時間コスト差引後利益」は会計上の利益ですか？</summary><p>いいえ。税務・会計上の利益ではなく、目標時給をもとにした参考値です。</p></details>
+        <details><summary>一人親方や個人事業主でも使えますか？</summary><p>はい。一人親方や個人事業主の案件条件の確認に使えます。</p></details>
+        <details><summary>見積金額はいくらにすればいいですか？</summary><p>入力条件から見積額の目安を確認できます。最終的な価格設定・受注判断はご自身で行ってください。</p></details>
     </section>
 
     <footer class="note">時間コストは、入力した目標時給をもとにした参考値です。本ツールの「時間コスト差引後利益」は、税務・会計上の利益を示すものではありません。受注判定は、ユーザー自身が設定した条件を基準とする参考表示です。最終的な価格設定・受注判断はユーザー自身で行ってください。</footer>
